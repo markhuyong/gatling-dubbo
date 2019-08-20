@@ -4,18 +4,19 @@ import java.util.concurrent.ExecutorService
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.gatling.commons.stats.Status
+import io.gatling.commons.util.DefaultClock
 import io.gatling.commons.validation.Failure
 import io.gatling.core.CoreComponents
 import io.gatling.core.action._
 import io.gatling.core.check.Check
-import io.gatling.core.session.{ Expression, Session }
+import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.stats.message.ResponseTimings
 import io.gatling.core.util.NameGen
 import io.gatling.dubbo.DubboCheck
 
-import scala.concurrent.{ ExecutionContext, Future }
-import scala.util.{ Success, Failure => UFailure }
+import scala.concurrent.{ExecutionContext, Future}
+import scala.util.{Success, Failure => UFailure}
 
 class DubboAction[A](
                       requestName:      Expression[String],
@@ -29,6 +30,7 @@ class DubboAction[A](
                     ) extends ExitableAction with NameGen {
 
   implicit val ec = ExecutionContext.fromExecutor(executor)
+  implicit val clock = new DefaultClock
 
   override def statsEngine: StatsEngine = coreComponents.statsEngine
 
